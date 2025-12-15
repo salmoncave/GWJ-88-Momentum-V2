@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://cd18iyi5fgv3h"]
+
+[node name="SnowballController" type="Node3D"]

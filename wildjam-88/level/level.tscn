@@ -1,12 +1,15 @@
-[gd_scene load_steps=9 format=3 uid="uid://bq6l14mwdukbi"]
+[gd_scene load_steps=10 format=3 uid="uid://bq6l14mwdukbi"]
 
 [ext_resource type="Script" uid="uid://cla62be8vekh5" path="res://level/level.gd" id="1_7lnir"]
 [ext_resource type="PackedScene" uid="uid://cdef7vnhy7wkn" path="res://snowball/snowball.tscn" id="2_5gx2l"]
-[ext_resource type="PackedScene" uid="uid://datum5ydunlxc" path="res://level/level_chunk/level_chunk.tscn" id="3_qohg2"]
 [ext_resource type="Script" uid="uid://b7lscemcdbu3f" path="res://level/chunk_path_3d.gd" id="3_vkbyq"]
+[ext_resource type="PackedScene" uid="uid://dcjyfrjgges26" path="res://level/level_chunk/saved_chunks/level_chunk_00.tscn" id="4_ktfr2"]
+[ext_resource type="PackedScene" uid="uid://py3bclku6aui" path="res://level/level_chunk/saved_chunks/level_chunk_01.tscn" id="6_ivpvi"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5gx2l"]
+sky_top_color = Color(0.5202867, 0.7222306, 1, 1)
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_bottom_color = Color(0.5054729, 0.7322694, 1, 1)
 ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
 
 [sub_resource type="Sky" id="Sky_qohg2"]
@@ -17,10 +20,11 @@ background_mode = 2
 sky = SubResource("Sky_qohg2")
 tonemap_mode = 2
 glow_enabled = true
+fog_light_color = Color(0.65428936, 0.7531683, 1, 1)
 
 [sub_resource type="Curve3D" id="Curve3D_5gx2l"]
 _data = {
-"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, -20, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, -100, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
@@ -32,28 +36,38 @@ script = ExtResource("1_7lnir")
 environment = SubResource("Environment_vkbyq")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+transform = Transform3D(-0.60274327, -0.66039836, -0.4478556, -0.6218525, 0.037067637, 0.7822567, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+light_color = Color(0.8862616, 0.88626146, 0.8862615, 1)
+light_energy = 0.8
 shadow_enabled = true
 
 [node name="SnowballRoot" type="Node3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, -2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.95, -10)
 
 [node name="Snowball" parent="SnowballRoot" instance=ExtResource("2_5gx2l")]
 
+[node name="Camera3D" type="Camera3D" parent="SnowballRoot"]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 3.25, 2.5)
+fov = 60.0
+
 [node name="ChunkPath3D" type="Path3D" parent="."]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 0, 0)
 curve = SubResource("Curve3D_5gx2l")
 script = ExtResource("3_vkbyq")
-level_chunk_packed_scene = ExtResource("3_qohg2")
+base_speed = 5.0
+chunk_scene_weights = Dictionary[PackedScene, float]({
+ExtResource("4_ktfr2"): 1.0,
+ExtResource("6_ivpvi"): 1
+})
 
 [node name="ChunkSpawnTimer" type="Timer" parent="ChunkPath3D"]
 unique_name_in_owner = true
 
 [node name="CSGBox3D" type="CSGBox3D" parent="ChunkPath3D"]
-size = Vector3(20, 2, 100)
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 3.5, 2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -30)
+visible = false
+size = Vector3(20, 2, 200)
 
 [connection signal="timeout" from="ChunkPath3D/ChunkSpawnTimer" to="ChunkPath3D" method="_on_chunk_spawn_timer_timeout"]
