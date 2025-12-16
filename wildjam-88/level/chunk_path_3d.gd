@@ -12,6 +12,7 @@ const CHUNK_LENGTH := 10.0
 #@export var level_chunk_packed_scene: PackedScene
 
 var current_speed: float = 0.0
+var acceleration: float = 1.0
 var is_active: bool = true
 var _path_nodes_progress_ratios: Dictionary[PathFollow3D, float]
 
@@ -25,12 +26,13 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("split"):
 		_spawn_new_chunk_on_path()
 	_process_path_movement(delta, current_speed)
+	#current_speed += (acceleration * delta)
 
 func _on_level_loaded() -> void:
 	_spawn_initial_chunks()
 
 func _on_level_started() -> void:
-	_start_chunk_interval_timer()
+	#_start_chunk_interval_timer()
 	is_active = true
 
 func _on_level_ended() -> void:
@@ -72,9 +74,6 @@ func _spawn_new_chunk_on_path() -> PathFollow3D:
 	path_follow_node.progress_ratio = 0.0
 	_path_nodes_progress_ratios[path_follow_node] = path_follow_node.progress_ratio
 	
-	if is_active:
-		_start_chunk_interval_timer()
-	
 	return path_follow_node
 
 func _start_chunk_interval_timer() -> void:
@@ -85,12 +84,13 @@ func _remove_chunk_from_path(chunk_path_follow_node: PathFollow3D) -> void:
 		_path_nodes_progress_ratios.erase(chunk_path_follow_node)
 	
 	chunk_path_follow_node.queue_free.call_deferred()
+	_spawn_new_chunk_on_path()
 
 func _get_chunk_spawn_interval_seconds() -> float:
 	var interval_seconds := (
 		1  / (current_speed * (CHUNK_LENGTH / PATH_LENGTH))
 	)
-	
+	print('Interval: ', interval_seconds)
 	return interval_seconds
 
 

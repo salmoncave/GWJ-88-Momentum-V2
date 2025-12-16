@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://bq6l14mwdukbi"]
+[gd_scene load_steps=11 format=3 uid="uid://bq6l14mwdukbi"]
 
 [ext_resource type="Script" uid="uid://cla62be8vekh5" path="res://level/level.gd" id="1_7lnir"]
 [ext_resource type="PackedScene" uid="uid://cdef7vnhy7wkn" path="res://snowball/snowball.tscn" id="2_5gx2l"]
 [ext_resource type="Script" uid="uid://b7lscemcdbu3f" path="res://level/chunk_path_3d.gd" id="3_vkbyq"]
 [ext_resource type="PackedScene" uid="uid://dcjyfrjgges26" path="res://level/level_chunk/saved_chunks/level_chunk_00.tscn" id="4_ktfr2"]
+[ext_resource type="Script" uid="uid://cvp7lkhebvr6p" path="res://level/speed_manager.gd" id="6_44x8d"]
 [ext_resource type="PackedScene" uid="uid://py3bclku6aui" path="res://level/level_chunk/saved_chunks/level_chunk_01.tscn" id="6_ivpvi"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5gx2l"]
@@ -20,7 +21,9 @@ background_mode = 2
 sky = SubResource("Sky_qohg2")
 tonemap_mode = 2
 glow_enabled = true
-fog_light_color = Color(0.65428936, 0.7531683, 1, 1)
+fog_enabled = true
+fog_light_color = Color(0.79592055, 0.8555573, 0.9999979, 1)
+fog_density = 0.03
 
 [sub_resource type="Curve3D" id="Curve3D_5gx2l"]
 _data = {
@@ -36,16 +39,23 @@ script = ExtResource("1_7lnir")
 environment = SubResource("Environment_vkbyq")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.60274327, -0.66039836, -0.4478556, -0.6218525, 0.037067637, 0.7822567, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+unique_name_in_owner = true
+transform = Transform3D(1.1068112e-07, -0.7660443, -0.6427876, 5.619428e-08, -0.6427876, 0.7660444, -1, -1.2090763e-07, -2.8097139e-08, 0, 0, 0)
 light_color = Color(0.8862616, 0.88626146, 0.8862615, 1)
-light_energy = 0.8
+light_energy = 0.75
 shadow_enabled = true
+
+[node name="SpeedManager" type="Node3D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("6_44x8d")
 
 [node name="SnowballRoot" type="Node3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.95, -10)
 
 [node name="Snowball" parent="SnowballRoot" instance=ExtResource("2_5gx2l")]
+unique_name_in_owner = true
+base_rotation_speed_degrees = 40.0
 
 [node name="Camera3D" type="Camera3D" parent="SnowballRoot"]
 transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 3.25, 2.5)
@@ -56,9 +66,8 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 0, 0)
 curve = SubResource("Curve3D_5gx2l")
 script = ExtResource("3_vkbyq")
-base_speed = 5.0
-chunk_scene_weights = Dictionary[PackedScene, float]({
-ExtResource("4_ktfr2"): 1.0,
+chunk_scene_weights = Dictionary[PackedScene, int]({
+ExtResource("4_ktfr2"): 1,
 ExtResource("6_ivpvi"): 1
 })
 

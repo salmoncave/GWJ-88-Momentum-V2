@@ -4,10 +4,14 @@ class_name Snowball extends Node3D
 @onready var rigid_body_3d: RigidBody3D = %RigidBody3D
 @onready var collision_shape_3d: CollisionShape3D = %CollisionShape3D
 
-func _physics_process(delta: float) -> void:
-	apply_rotation(delta, 100.0)
+var rotation_speed_degrees: float = 50.0
 
-func apply_rotation(delta: float, rotation_speed_degrees: float) -> void:
+@export var base_rotation_speed_degrees: float = 50.0
+
+func _init() -> void:
+	rotation_speed_degrees = base_rotation_speed_degrees
+
+func apply_rotation(delta: float) -> void:
 	var rotation_value := transform_root.rotation_degrees.x + (delta * -rotation_speed_degrees)
 	rotation_value = wrapf(rotation_value, 0.0, 360.0)
 	

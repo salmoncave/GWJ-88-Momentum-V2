@@ -1,6 +1,24 @@
-[gd_scene load_steps=3 format=3 uid="uid://datum5ydunlxc"]
+[gd_scene load_steps=7 format=3 uid="uid://datum5ydunlxc"]
 
 [ext_resource type="Script" uid="uid://o4phs8llnxvc" path="res://level/level_chunk/level_chunk.gd" id="1_a4psx"]
+
+[sub_resource type="Gradient" id="Gradient_a4psx"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_a4psx"]
+noise_type = 0
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_mn2hs"]
+noise = SubResource("FastNoiseLite_a4psx")
+color_ramp = SubResource("Gradient_a4psx")
+seamless = true
+in_3d_space = true
+as_normal_map = true
+bump_strength = 15.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a4psx"]
+normal_enabled = true
+normal_texture = SubResource("NoiseTexture2D_mn2hs")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a5jfq"]
 
@@ -8,18 +26,20 @@
 script = ExtResource("1_a4psx")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
-size = Vector3(20, 1, 10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.02427864, 0, -0.0028100014)
+size = Vector3(20, 1, 10.1)
+material = SubResource("StandardMaterial3D_a4psx")
 
 [node name="LeftCSGCombiner3D" type="CSGCombiner3D" parent="."]
 
 [node name="SpacerCSGBox3D" type="CSGBox3D" parent="LeftCSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.5, 0, 0)
-size = Vector3(5, 1, 10)
+size = Vector3(5, 1, 10.1)
 material = SubResource("StandardMaterial3D_a5jfq")
 
 [node name="RightCSGCombiner3D" type="CSGCombiner3D" parent="."]
 
 [node name="SpacerCSGBox3D" type="CSGBox3D" parent="RightCSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, 0)
-size = Vector3(5, 1, 10)
+size = Vector3(5, 1, 10.1)
 material = SubResource("StandardMaterial3D_a5jfq")
