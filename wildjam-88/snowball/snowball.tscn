@@ -2,6 +2,9 @@
 
 [ext_resource type="Script" uid="uid://bfm7mbmn5ntof" path="res://snowball/snowball.gd" id="1_7vmu6"]
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_jfw0c"]
+radius = 0.2
+
 [sub_resource type="SphereMesh" id="SphereMesh_jfw0c"]
 radius = 0.2
 height = 0.4
@@ -59,18 +62,23 @@ shading_mode = 0
 vertex_color_use_as_albedo = true
 albedo_color = Color(0.36722228, 0.44956642, 0.5912874, 1)
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_jfw0c"]
-radius = 0.2
-
-[node name="Snowball" type="Node3D"]
+[node name="Snowball" type="RigidBody3D"]
+gravity_scale = 0.0
+lock_rotation = true
+freeze = true
+freeze_mode = 1
 script = ExtResource("1_7vmu6")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+unique_name_in_owner = true
+shape = SubResource("SphereShape3D_jfw0c")
 
 [node name="TransformRoot" type="Node3D" parent="."]
 unique_name_in_owner = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="TransformRoot"]
 mesh = SubResource("SphereMesh_jfw0c")
-skeleton = NodePath("../..")
+skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_g35oh")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="TransformRoot/MeshInstance3D"]
@@ -81,14 +89,3 @@ surface_material_override/0 = SubResource("StandardMaterial3D_jfw0c")
 billboard = 1
 no_depth_test = true
 text = "5"
-
-[node name="RigidBody3D" type="RigidBody3D" parent="TransformRoot"]
-unique_name_in_owner = true
-gravity_scale = 0.0
-lock_rotation = true
-freeze = true
-freeze_mode = 1
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="TransformRoot/RigidBody3D"]
-unique_name_in_owner = true
-shape = SubResource("SphereShape3D_jfw0c")

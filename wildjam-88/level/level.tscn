@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bq6l14mwdukbi"]
+[gd_scene load_steps=22 format=3 uid="uid://bq6l14mwdukbi"]
 
 [ext_resource type="Script" uid="uid://cla62be8vekh5" path="res://level/level.gd" id="1_7lnir"]
 [ext_resource type="PackedScene" uid="uid://cdef7vnhy7wkn" path="res://snowball/snowball.tscn" id="2_5gx2l"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://dcjyfrjgges26" path="res://level/level_chunk/saved_chunks/level_chunk_00.tscn" id="4_ktfr2"]
 [ext_resource type="Script" uid="uid://cvp7lkhebvr6p" path="res://level/speed_manager.gd" id="6_44x8d"]
 [ext_resource type="PackedScene" uid="uid://py3bclku6aui" path="res://level/level_chunk/saved_chunks/level_chunk_01.tscn" id="6_ivpvi"]
+[ext_resource type="Shader" uid="uid://beun8l5u1qsyi" path="res://common/shaders/water_shader.tres" id="7_ivpvi"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5gx2l"]
 sky_top_color = Color(0.5202867, 0.7222306, 1, 1)
@@ -22,7 +23,7 @@ sky = SubResource("Sky_qohg2")
 tonemap_mode = 2
 glow_enabled = true
 fog_enabled = true
-fog_light_color = Color(0.79592055, 0.8555573, 0.9999979, 1)
+fog_light_color = Color(0.57161885, 0.6883142, 1, 1)
 fog_density = 0.03
 
 [sub_resource type="Curve3D" id="Curve3D_5gx2l"]
@@ -31,6 +32,63 @@ _data = {
 "tilts": PackedFloat32Array(0, 0)
 }
 point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_ivpvi"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_0v1st"]
+noise_type = 0
+frequency = 0.05
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6gtgk"]
+noise = SubResource("FastNoiseLite_0v1st")
+color_ramp = SubResource("Gradient_ivpvi")
+seamless = true
+in_3d_space = true
+as_normal_map = true
+bump_strength = 20.0
+
+[sub_resource type="Gradient" id="Gradient_cw150"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_xii2b"]
+noise_type = 2
+domain_warp_type = 1
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_rhqlf"]
+noise = SubResource("FastNoiseLite_xii2b")
+color_ramp = SubResource("Gradient_cw150")
+seamless = true
+in_3d_space = true
+as_normal_map = true
+bump_strength = 20.0
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ivpvi"]
+noise_type = 2
+frequency = 0.034
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0v1st"]
+noise = SubResource("FastNoiseLite_ivpvi")
+seamless = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rhqlf"]
+render_priority = 0
+shader = ExtResource("7_ivpvi")
+shader_parameter/NoiseScale = 10.0
+shader_parameter/TimeScale = 0.025
+shader_parameter/VertexNoiseWave = SubResource("NoiseTexture2D_0v1st")
+shader_parameter/HeightScale = 0.15
+shader_parameter/Albedo = Color(1.6996171e-07, 0.08975228, 0.08975231, 1)
+shader_parameter/Fresnel_Color = Color(1, 1, 1, 1)
+shader_parameter/Frensnel_Power = 5.0
+shader_parameter/Metallic = 0.0
+shader_parameter/Roughness = 0.02
+shader_parameter/WaveDirection00 = Vector2(0, -1)
+shader_parameter/Texture00 = SubResource("NoiseTexture2D_6gtgk")
+shader_parameter/WaveDirection01 = Vector2(0, -1)
+shader_parameter/Texture01 = SubResource("NoiseTexture2D_rhqlf")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_44x8d"]
+material = SubResource("ShaderMaterial_rhqlf")
+size = Vector2(11, 150)
 
 [node name="Level" type="Node3D"]
 script = ExtResource("1_7lnir")
@@ -51,14 +109,14 @@ script = ExtResource("6_44x8d")
 
 [node name="SnowballRoot" type="Node3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.95, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5, -10)
 
 [node name="Snowball" parent="SnowballRoot" instance=ExtResource("2_5gx2l")]
 unique_name_in_owner = true
 base_rotation_speed_degrees = 40.0
 
 [node name="Camera3D" type="Camera3D" parent="SnowballRoot"]
-transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 3.25, 2.5)
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 6.5, 5)
 fov = 60.0
 
 [node name="ChunkPath3D" type="Path3D" parent="."]
@@ -74,9 +132,9 @@ ExtResource("6_ivpvi"): 1
 [node name="ChunkSpawnTimer" type="Timer" parent="ChunkPath3D"]
 unique_name_in_owner = true
 
-[node name="CSGBox3D" type="CSGBox3D" parent="ChunkPath3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -30)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="ChunkPath3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.372, -50)
 visible = false
-size = Vector3(20, 2, 200)
+mesh = SubResource("PlaneMesh_44x8d")
 
 [connection signal="timeout" from="ChunkPath3D/ChunkSpawnTimer" to="ChunkPath3D" method="_on_chunk_spawn_timer_timeout"]

@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://b2fpim8i51gfe"]
+
+[ext_resource type="Script" uid="uid://djbkakf2s6uqu" path="res://level/level_chunk/obstacles/obstacle.gd" id="1_lri87"]
+
+[node name="Obstacle" type="Area3D"]
+script = ExtResource("1_lri87")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

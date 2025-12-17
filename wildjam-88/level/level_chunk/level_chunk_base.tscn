@@ -1,26 +1,30 @@
-[gd_scene load_steps=7 format=3 uid="uid://datum5ydunlxc"]
+[gd_scene load_steps=9 format=3 uid="uid://datum5ydunlxc"]
 
 [ext_resource type="Script" uid="uid://o4phs8llnxvc" path="res://level/level_chunk/level_chunk.gd" id="1_a4psx"]
+[ext_resource type="PackedScene" uid="uid://ctg1hkafku4rv" path="res://level/level_chunk/obstacles/lamp_obstacle.tscn" id="2_mn2hs"]
 
-[sub_resource type="Gradient" id="Gradient_a4psx"]
+[sub_resource type="Gradient" id="Gradient_mn2hs"]
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_a4psx"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_w6kpw"]
 noise_type = 0
 fractal_type = 2
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_mn2hs"]
-noise = SubResource("FastNoiseLite_a4psx")
-color_ramp = SubResource("Gradient_a4psx")
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_etpmx"]
+noise = SubResource("FastNoiseLite_w6kpw")
+color_ramp = SubResource("Gradient_mn2hs")
 seamless = true
 in_3d_space = true
 as_normal_map = true
 bump_strength = 15.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a4psx"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4xkkr"]
 normal_enabled = true
-normal_texture = SubResource("NoiseTexture2D_mn2hs")
+normal_texture = SubResource("NoiseTexture2D_etpmx")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a5jfq"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a4psx"]
+size = Vector3(5, 10, 10.25)
 
 [node name="LevelChunk" type="Node3D"]
 script = ExtResource("1_a4psx")
@@ -28,7 +32,7 @@ script = ExtResource("1_a4psx")
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.02427864, 0, -0.0028100014)
 size = Vector3(20, 1, 10.1)
-material = SubResource("StandardMaterial3D_a4psx")
+material = SubResource("StandardMaterial3D_4xkkr")
 
 [node name="LeftCSGCombiner3D" type="CSGCombiner3D" parent="."]
 
@@ -37,9 +41,26 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.5, 0, 0)
 size = Vector3(5, 1, 10.1)
 material = SubResource("StandardMaterial3D_a5jfq")
 
+[node name="StaticBody3D" type="StaticBody3D" parent="LeftCSGCombiner3D/SpacerCSGBox3D"]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LeftCSGCombiner3D/SpacerCSGBox3D/StaticBody3D"]
+shape = SubResource("BoxShape3D_a4psx")
+
 [node name="RightCSGCombiner3D" type="CSGCombiner3D" parent="."]
 
 [node name="SpacerCSGBox3D" type="CSGBox3D" parent="RightCSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, 0)
 size = Vector3(5, 1, 10.1)
 material = SubResource("StandardMaterial3D_a5jfq")
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="RightCSGCombiner3D/SpacerCSGBox3D"]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RightCSGCombiner3D/SpacerCSGBox3D/StaticBody3D2"]
+shape = SubResource("BoxShape3D_a4psx")
+
+[node name="Obstacles" type="Node3D" parent="."]
+
+[node name="Obstacle" parent="Obstacles" instance=ExtResource("2_mn2hs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)

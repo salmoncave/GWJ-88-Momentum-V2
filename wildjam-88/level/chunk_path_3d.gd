@@ -71,6 +71,8 @@ func _spawn_new_chunk_on_path() -> PathFollow3D:
 	add_child(path_follow_node)
 	path_follow_node.add_child(level_chunk_node)
 	
+	level_chunk_node.generate_chunk() 
+	
 	path_follow_node.progress_ratio = 0.0
 	_path_nodes_progress_ratios[path_follow_node] = path_follow_node.progress_ratio
 	

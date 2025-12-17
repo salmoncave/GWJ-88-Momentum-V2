@@ -20,4 +20,4 @@ func _process_speed_operations(delta: float) -> void:
 	#print('snowball rotation speed: ', snowball.rotation_speed_degrees)
 	
 	chunk_path_3d.current_speed = speed
-	print('Speed: ', speed)
+	#print('Speed: ', speed)
